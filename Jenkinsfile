@@ -24,3 +24,21 @@ pipeline {
             }
             
         }
+        stage('Push Docker Image'){
+            steps{
+               withCredentials([string(credentialsId: 'docker-pwd', variable: 'dockerHubPwd')]) {
+                  sh "docker login -u rocky751 -p ${dockerHubPwd}"
+               }
+            sh 'docker push rocky751/my-app:2.0.0'
+            }
+           
+        }
+        stage('Deploy'){
+            steps {
+                sh 'docker run -p 8080:8080 -d --name my-app rocky07/my-app:2.0.0'
+            }
+            
+        }
+   }
+   
+}   
